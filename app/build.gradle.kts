@@ -10,6 +10,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
     kotlin("jvm") version "1.9.22"
+    kotlin("kapt") version "1.9.22"
 
     // For building a fat JAR
     id("com.github.johnrengelman.shadow") version "8.1.1"
@@ -27,28 +28,34 @@ repositories {
     mavenCentral()
 }
 
+apply(plugin = "com.github.johnrengelman.shadow")
 tasks.jar {
-    // To avoid the duplicate handling strategy error
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
-    // To add all the dependencies
-    from(sourceSets.main.get().output)
-
-    dependsOn(configurations.runtimeClasspath)
-    from({
-        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
-    })
+    enabled = false
+}
+tasks.shadowJar {
+    transform(com.github.jengelman.gradle.plugins.shadow.transformers.Log4j2PluginsCacheFileTransformer::class.java)
+}
+tasks.build {
+    dependsOn(tasks.shadowJar)
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
-    testImplementation("org.mockito:mockito-junit-jupiter:5.10.0")
-
-    // This dependency is used by the application.
     implementation("com.google.guava:guava:31.1-jre")
     implementation("com.amazonaws:aws-lambda-java-core:1.2.3")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.0.1")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.16.+")
+    implementation("com.amazonaws:aws-lambda-java-log4j2:1.6.0")
+    implementation("org.apache.logging.log4j:log4j-layout-template-json:2.23.0")
+
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.10.0")
+}
+
+// Dagger
+dependencies {
+    val daggerVersion = "2.50"
+    implementation("com.google.dagger:dagger:$daggerVersion")
+    kapt("com.google.dagger:dagger-compiler:$daggerVersion")
 }
 
 apply(plugin = "org.jlleitschuh.gradle.ktlint")
