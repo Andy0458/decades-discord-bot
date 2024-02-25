@@ -41,11 +41,13 @@ tasks.build {
 
 dependencies {
     implementation("com.google.guava:guava:31.1-jre")
-    implementation("com.amazonaws:aws-lambda-java-core:1.2.3")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.0.1")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.16.+")
-    implementation("com.amazonaws:aws-lambda-java-log4j2:1.6.0")
     implementation("org.apache.logging.log4j:log4j-layout-template-json:2.23.0")
+
+    implementation("software.amazon.awssdk:secretsmanager:2.24.9")
+    implementation("com.amazonaws:aws-lambda-java-core:1.2.3")
+    implementation("com.amazonaws:aws-lambda-java-log4j2:1.6.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
     testImplementation("org.mockito:mockito-junit-jupiter:5.10.0")
