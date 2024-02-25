@@ -84,16 +84,18 @@ abstract class AbstractService<ErrorType : ErrorResponse>(
     ): Either<ErrorType, Response> {
         val response =
             httpClient.send(
-                HttpRequest.newBuilder(URI("$endpoint/$resource/".plus(id)))
+                HttpRequest.newBuilder(URI("$endpoint/$resource".plus(id?.let { "/$id" }.orEmpty())))
                     .apply {
                         when (method) {
                             "GET" -> GET()
                             "DELETE" -> DELETE()
-                            else ->
+                            else -> {
                                 method(
                                     method,
                                     HttpRequest.BodyPublishers.ofString(OBJECT_MAPPER.writeValueAsString(body)),
                                 )
+                                header("Content-Type", "application/json")
+                            }
                         }
                         defaultHeaders?.forEach { (key, value) ->
                             header(key, value)
