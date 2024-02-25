@@ -8,4 +8,4 @@
  */
 
 rootProject.name = "decades-discord-bot"
-include("app")
+include("decades-discord-bot-lambda")
