@@ -2,6 +2,7 @@ package decades.discord.bot.dagger
 
 import dagger.Component
 import decades.discord.bot.dagger.module.ServiceModule
+import decades.discord.bot.handler.CreateRaidApiHandler
 import decades.discord.bot.handler.EchoLambda
 import javax.inject.Singleton
 
@@ -13,4 +14,6 @@ import javax.inject.Singleton
 )
 interface LambdaComponent {
     fun inject(echoLambda: EchoLambda)
+
+    fun inject(createRaidApiHandler: CreateRaidApiHandler)
 }

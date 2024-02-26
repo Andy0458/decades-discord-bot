@@ -48,6 +48,7 @@ dependencies {
     implementation("software.amazon.awssdk:secretsmanager:2.24.9")
     implementation("com.amazonaws:aws-lambda-java-core:1.2.3")
     implementation("com.amazonaws:aws-lambda-java-log4j2:1.6.0")
+    implementation("com.amazonaws:aws-lambda-java-events:3.11.4")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
     testImplementation("org.mockito:mockito-junit-jupiter:5.10.0")

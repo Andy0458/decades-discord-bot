@@ -1,0 +1,17 @@
+{
+  "version": "1.0",
+  "sources": ["model"],
+  "projections": {
+    "apigateway": {
+      "imports": ["model/"],
+      "plugins": {
+        "openapi": {
+          "service": "decades.discord.bot#DecadesDiscordBotService",
+          "protocol": "aws.protocols#restJson1",
+          "apiGatewayDefaults": "2023-08-11",
+          "apiGatewayType": "REST"
+        }
+      }
+    }
+  }
+}

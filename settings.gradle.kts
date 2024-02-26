@@ -9,3 +9,4 @@
 
 rootProject.name = "decades-discord-bot"
 include("decades-discord-bot-lambda")
+include("decades-discord-bot-model")

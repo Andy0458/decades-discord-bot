@@ -11,13 +11,17 @@ import java.io.OutputStream
 
 interface LambdaHandler<I : Any, O : Any?> : RequestStreamHandler {
     companion object {
-        private val OBJECT_MAPPER =
+        internal val OBJECT_MAPPER =
             ObjectMapper()
                 .configure(JsonParser.Feature.ALLOW_COMMENTS, true)
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .registerKotlinModule()
         private val OBJECT_WRITER = OBJECT_MAPPER.writer()
     }
+
+    val objectMapper: ObjectMapper
+        get() = OBJECT_MAPPER
+    val inputType: Class<I>
 
     fun <T : Any> readJson(
         clazz: Class<T>,
@@ -29,8 +33,6 @@ interface LambdaHandler<I : Any, O : Any?> : RequestStreamHandler {
     fun Any?.writeJsonNullable(outputStream: OutputStream) {
         if (this != null) OBJECT_WRITER.writeValue(outputStream, this)
     }
-
-    val inputType: Class<I>
 
     fun handle(
         input: I,

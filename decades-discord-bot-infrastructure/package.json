@@ -1,0 +1,26 @@
+{
+  "name": "decades-discord-bot-infrastructure",
+  "version": "0.1.0",
+  "bin": {
+    "decades-discord-bot-infrastructure": "bin/decades-discord-bot-infrastructure.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "cdk": "cdk",
+    "clean": "rimraf node_modules cdk.out",
+    "synth": "cdk synth"
+  },
+  "devDependencies": {
+    "@types/node": "20.11.19",
+    "aws-cdk": "2.130.0",
+    "ts-node": "^10.9.2",
+    "typescript": "~5.3.3"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "2.130.0",
+    "constructs": "^10.0.0",
+    "rimraf": "^5.0.5",
+    "source-map-support": "^0.5.21"
+  }
+}
