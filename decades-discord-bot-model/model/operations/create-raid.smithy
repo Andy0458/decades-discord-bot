@@ -13,11 +13,15 @@ operation CreateRaid {
         @required
         name: String
         @required
+        team: String
+        @required
+        leader: String
+        @required
         raiders: Raiders
         @required
-        startTime: Timestamp
-        @required
+        startTime: Integer
         parentChannelId: String
+        threadId: String
         additionalMessage: String
     }
     output := {

@@ -8,11 +8,13 @@ const stages = [
     stage: 'personal',
     account: process.env.PERSONAL_ACCOUNT_ID,
     region: 'us-east-1',
+    serverId: '1089073001728856195',
   },
   {
     stage: 'prod',
     account: '533267375856',
     region: 'us-east-1',
+    serverId: '170966255409430528',
   }
 ]
 

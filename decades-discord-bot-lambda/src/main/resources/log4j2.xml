@@ -1,11 +1,11 @@
-<Configuration status="INFO">
+<Configuration status="DEBUG">
     <Appenders>
         <Lambda name="Lambda">
             <JsonTemplateLayout eventTemplateUri="classpath:LogFormat.json" locationInfoEnabled="true"/>
         </Lambda>
     </Appenders>
     <Loggers>
-        <Root level="INFO">
+        <Root level="DEBUG">
             <AppenderRef ref="Lambda"/>
         </Root>
     </Loggers>

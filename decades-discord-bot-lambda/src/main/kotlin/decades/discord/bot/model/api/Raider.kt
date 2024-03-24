@@ -4,5 +4,5 @@ data class Raider(
     val userId: String,
     val characterName: String,
     val characterClass: String,
-    val characterRole: String,
+    val characterRole: Role,
 )

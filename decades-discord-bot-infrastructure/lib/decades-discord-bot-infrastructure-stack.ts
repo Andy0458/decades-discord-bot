@@ -1,7 +1,8 @@
 import { Duration, Stack, StackProps } from 'aws-cdk-lib';
 import { ApiDefinition, SpecRestApi } from 'aws-cdk-lib/aws-apigateway';
+import { LambdaDeploymentConfig, LambdaDeploymentGroup } from 'aws-cdk-lib/aws-codedeploy';
 import { Effect, PolicyStatement, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
-import { Code, Function, Runtime } from 'aws-cdk-lib/aws-lambda';
+import { Alias, Code, Function, Runtime, SnapStartConf } from 'aws-cdk-lib/aws-lambda';
 import { Secret } from 'aws-cdk-lib/aws-secretsmanager';
 import { Construct } from 'constructs';
 import { readFileSync } from 'fs';
@@ -9,6 +10,7 @@ import path = require('path');
 
 export interface DecadesDiscordBotInfrastructureStackProps extends StackProps {
   readonly stage: string
+  readonly serverId: string
 }
 
 export class DecadesDiscordBotInfrastructureStack extends Stack {
@@ -19,6 +21,7 @@ export class DecadesDiscordBotInfrastructureStack extends Stack {
     const apiDefinition = this.getApiDefinition();
     const handlers = this.createApiOperationHandlers(apiDefinition, {
         DiscordBotTokenSecretId: discordBotTokenSecret.secretName,
+        ServerId: props.serverId,
     });
 
     const api = new SpecRestApi(this, 'RestApi', {
@@ -28,7 +31,7 @@ export class DecadesDiscordBotInfrastructureStack extends Stack {
       },
       apiDefinition: ApiDefinition.fromInline(apiDefinition),
     });
-    handlers.forEach((handler: Function) => {
+    handlers.forEach((handler: Alias) => {
       handler.addPermission(`APIGInvoke`, {
         principal: new ServicePrincipal("apigateway.amazonaws.com"),
         sourceArn: `arn:${this.partition}:execute-api:${this.region}:${this.account}:${api.restApiId}/*/*/*`,
@@ -50,7 +53,7 @@ export class DecadesDiscordBotInfrastructureStack extends Stack {
     );
   }
 
-  private createApiOperationHandlers(apiDefinition: any, env?: any): Map<String, Function> {
+  private createApiOperationHandlers(apiDefinition: any, env?: any): Map<String, Alias> {
     const map = new Map()
     for (const p in apiDefinition.paths) {
       for (const operation in apiDefinition.paths[p]) {
@@ -62,12 +65,23 @@ export class DecadesDiscordBotInfrastructureStack extends Stack {
             path.join(__dirname, '../../decades-discord-bot-lambda/build/libs/decades-discord-bot-lambda-all.jar'),
           ),
           handler: `decades.discord.bot.handler.${opId}ApiHandler::handleRequest`,
+          memorySize: 512,
           timeout: Duration.seconds(30),
           environment: env,
+          snapStart: SnapStartConf.ON_PUBLISHED_VERSIONS,
+        });
+        const version = handler.currentVersion;
+        const alias = new Alias(this, `${opId}ApiHandlerLambdaAlias`, {
+          aliasName: 'live',
+          version: version,
+        });
+        new LambdaDeploymentGroup(this, `${opId}ApiHandlerLambdaDeploymentGroup`, {
+          alias: alias,
+          deploymentConfig: LambdaDeploymentConfig.ALL_AT_ONCE,
         });
         const integration = op["x-amazon-apigateway-integration"];
-        integration.uri = `arn:${this.partition}:apigateway:${this.region}:lambda:path/2015-03-31/functions/${handler.functionArn}/invocations`;
-        map.set(op.operationId, handler);
+        integration.uri = `arn:${this.partition}:apigateway:${this.region}:lambda:path/2015-03-31/functions/${alias.functionArn}/invocations`;
+        map.set(op.operationId, alias);
       }
     }
     return map;

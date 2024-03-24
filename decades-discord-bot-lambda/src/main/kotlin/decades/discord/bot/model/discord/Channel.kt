@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 typealias ChannelType = Int
 
 const val GUILD_TEXT_CHANNEL: ChannelType = 0
+const val PUBLIC_THREAD: ChannelType = 11
 const val PRIVATE_THREAD: ChannelType = 12
 
 data class Channel(
@@ -16,7 +17,7 @@ data class Channel(
     val type: ChannelType,
     @JsonProperty("guild_id")
     val guildId: String,
-    val name: String,
+    val name: String? = null,
     @JsonProperty("parent_id")
     val parentId: String? = null,
 )

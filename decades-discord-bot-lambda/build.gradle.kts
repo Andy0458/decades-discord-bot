@@ -71,6 +71,7 @@ tasks.check {
 
 tasks.test {
     useJUnitPlatform()
+    exclude("**/E2ETest.class")
     testLogging.events =
         setOf(
             TestLogEvent.FAILED,

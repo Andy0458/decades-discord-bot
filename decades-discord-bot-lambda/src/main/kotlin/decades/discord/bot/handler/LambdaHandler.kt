@@ -36,7 +36,7 @@ interface LambdaHandler<I : Any, O : Any?> : RequestStreamHandler {
 
     fun handle(
         input: I,
-        context: Context,
+        context: Context?,
     ): O?
 
     override fun handleRequest(

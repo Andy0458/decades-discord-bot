@@ -30,7 +30,7 @@ class EchoLambda : LambdaHandler<EchoInput, EchoOutput> {
 
     override fun handle(
         input: EchoInput,
-        context: Context,
+        context: Context?,
     ): EchoOutput? {
         LOG.info("Input: $input")
         return EchoOutput(

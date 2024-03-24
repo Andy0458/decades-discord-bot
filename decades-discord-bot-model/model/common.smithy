@@ -14,11 +14,8 @@ list Raiders {
 }
 
 enum Role {
-    TANK,
-    DPS,
+    TANK
+    MELEE_DPS
+    RANGED_DPS
     HEALER
-}
-
-structure NotificationConfiguration {
-
 }
