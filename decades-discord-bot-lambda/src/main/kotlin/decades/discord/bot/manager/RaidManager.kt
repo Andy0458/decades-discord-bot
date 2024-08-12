@@ -18,10 +18,10 @@ class RaidManager
             val channelId: String =
                 createRaidInput.threadId
                     ?: createRaidInput.parentChannelId?.let {
-                        discordService.getForumThreadByName(
+                        discordService.getChannelByName(
                             name = createRaidInput.team,
                             parentChannelId = createRaidInput.parentChannelId,
-                        )?.id ?: discordService.createForumThread(
+                        )?.id ?: discordService.createChannel(
                             name = createRaidInput.team,
                             parentChannelId = createRaidInput.parentChannelId,
                         ).id

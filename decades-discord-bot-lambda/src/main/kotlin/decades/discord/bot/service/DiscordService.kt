@@ -126,6 +126,21 @@ class DiscordService
                 ),
             )!!
 
+        fun getChannelByName(
+            name: String,
+            parentChannelId: String? = null,
+        ): Channel? =
+            name.lowercase().replace(' ', '-').let { formattedName ->
+                handleResponse(
+                    get<List<Channel>>(
+                        resource = "guilds/$guildId/channels",
+                    ),
+                )?.firstOrNull { channel ->
+                    parentChannelId?.let { it == channel.parentId } ?: true &&
+                        formattedName == channel.name
+                }
+            }
+
         fun sendMessage(
             channelId: String,
             message: String? = null,
